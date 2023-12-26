@@ -1,0 +1,36 @@
+<main class="flex-grow-1">
+    <div class="container-lg mt-3">
+        <h1>Регистрация нового повреждение</h1>
+
+        <form action="/damages" method="POST">
+            <table class="table table-bordered table-hover" data-test="checks">
+                <thead>
+                    <tr>
+                        <th>Филиал</th>
+                        <th>Тепловой узел</th>
+                        <th>Величина утечки в т/ч</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <select id="departments">
+                                <option>-- Выберите филиал --</option>
+                                {% for department in departments %}
+                                    <option value="{{ department.id }}">{{ department.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select name="damage[thermal_unit_id]" id="thermal_units">
+                            </select>
+                        </td>
+                        <td><input type="text" name="damage[leakage_amount]"></td>
+                        <td><input type="submit" value="Отправить"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</main>

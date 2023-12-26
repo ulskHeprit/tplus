@@ -1,0 +1,41 @@
+<main class="flex-grow-1">
+    <div class="container-lg mt-3">
+        <h1>Изменение повреждения</h1>
+
+        <form action="/damages/{{ damage.id }}" method="POST">
+            <input type="hidden" name="_METHOD" value="PUT">
+            <table class="table table-bordered table-hover" data-test="checks">
+                <thead>
+                <tr>
+                    <th>Филиал</th>
+                    <th>Тепловой узел</th>
+                    <th>Величина утечки в т/ч</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <select id="departments">
+                            <option>-- Выберите филиал --</option>
+                            {% for department in departments %}
+                                <option value="{{ department.id }}" {% if damage.department_id == department.id %}selected{% endif %}>{{ department.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="damage[thermal_unit_id]" id="thermal_units">
+                            <option>-- Выберите филиал --</option>
+                            {% for thermal_unit in thermal_units %}
+                                <option value="{{ thermal_unit.id }}" {% if damage.thermal_unit_id == thermal_unit.id %}selected{% endif %}>{{ thermal_unit.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><input type="text" name="damage[leakage_amount]" value="{{ damage.leakage_amount }}"></td>
+                    <td><input type="submit" value="Отправить"></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</main>

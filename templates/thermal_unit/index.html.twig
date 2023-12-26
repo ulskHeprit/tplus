@@ -1,0 +1,23 @@
+<main class="flex-grow-1">
+    <div class="container-lg mt-3">
+        <h1>Тепловые узлы</h1>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-nowrap">
+                <tbody>
+                    <tr>
+                        <th>ID</th>
+                        <th>Филиал</th>
+                        <th>Название узла</th>
+                    </tr>
+                    {% for row in rows %}
+                        <tr>
+                            <td>{{ row.id }}</td>
+                            <td>{{ row.department_name }}</td>
+                            <td>{{ row.name }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,36 @@
+<main class="flex-grow-1">
+    <div class="container-lg mt-3">
+        <h1>Повреждения</h1>
+        <a href="/">Зарегистрирвать новое повреждения</a>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-nowrap">
+                <tbody>
+                    <tr>
+                        <th>Идентификатор повреждения</th>
+                        <th>Филиал</th>
+                        <th>Тепловой узел</th>
+                        <th>Величина утечки в т/ч</th>
+                        <th>Дата и время</th>
+                        <th>Действия</th>
+                    </tr>
+                    {% for row in rows %}
+                        <tr>
+                            <td>{{ row.id }}</td>
+                            <td>{{ row.department_name }}</td>
+                            <td>{{ row.thermal_unit_name }}</td>
+                            <td>{{ row.leakage_amount }}</td>
+                            <td>{{ row.date }}</td>
+                            <td>
+                                <a href="/damages/{{ row.id }}/edit">Изменить</a>
+                                <form action="/damages/{{ row.id }}" method="POST" onsubmit="return confirm('Действительно удалить повреждение?');">
+                                    <input type="hidden" name="_METHOD" value="DELETE"/>
+                                    <button type="submit">Удалить</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
