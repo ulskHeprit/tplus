@@ -33,6 +33,8 @@ CREATE TABLE damages (
     id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     thermal_unit_id int REFERENCES thermal_units (id),
     leakage_amount real NOT NULL,
+    longitude varchar(32),
+    latitude varchar(32),
     date timestamp NOT NULL
 );
 

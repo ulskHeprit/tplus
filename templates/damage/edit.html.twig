@@ -10,6 +10,8 @@
                     <th>Филиал</th>
                     <th>Тепловой узел</th>
                     <th>Величина утечки в т/ч</th>
+                    <th>Долгота</th>
+                    <th>Широта</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -32,10 +34,13 @@
                         </select>
                     </td>
                     <td><input type="text" name="damage[leakage_amount]" value="{{ damage.leakage_amount }}"></td>
+                    <td><input type="text" name="damage[longitude]" id="longitude" value="{{ damage.longitude }}"></td>
+                    <td><input type="text" name="damage[latitude]" id="latitude" value="{{ damage.latitude }}"></td>
                     <td><input type="submit" value="Отправить"></td>
                 </tr>
                 </tbody>
             </table>
+            {% include 'components/map.html.twig' %}
         </form>
     </div>
 </main>

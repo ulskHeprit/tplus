@@ -145,7 +145,8 @@ $app->get('/damages', function (Request $request, Response $response) {
     /** @var Db $db */
     $db = $this->get('db');
     $data['rows'] = $db->fetchAll(
-        'SELECT damages.id AS id, damages.leakage_amount AS leakage_amount, damages.date AS date,'
+        'SELECT damages.id AS id, damages.longitude AS longitude, damages.latitude AS latitude,'
+        . ' damages.leakage_amount AS leakage_amount, damages.date AS date,'
         . ' damages.thermal_unit_id AS thermal_unit_id, thermal_units.name AS thermal_unit_name,'
         . ' departments.id AS department_id, departments.name AS department_name FROM damages'
         . ' LEFT JOIN thermal_units ON damages.thermal_unit_id = thermal_units.id'
@@ -167,7 +168,8 @@ $app->get('/damages/{id:[0-9]+}/edit', function (Request $request, Response $res
     /** @var Db $db */
     $db = $this->get('db');
     $data['damage'] = $db->fetch(sprintf(
-        'SELECT damages.id AS id, damages.leakage_amount AS leakage_amount, damages.date AS date,'
+        'SELECT damages.id AS id, damages.longitude AS longitude, damages.latitude AS latitude,'
+        . ' damages.leakage_amount AS leakage_amount, damages.date AS date,'
         . ' damages.thermal_unit_id AS thermal_unit_id, thermal_units.name AS thermal_unit_name,'
         . ' departments.id AS department_id, departments.name AS department_name FROM damages'
         . ' LEFT JOIN thermal_units ON damages.thermal_unit_id = thermal_units.id'
@@ -205,10 +207,12 @@ $app->post('/damages', function (Request $request, Response $response) {
 
     $damageData['leakage_amount'] = str_replace(',', '.', $damageData['leakage_amount']);
 
-    if (!is_numeric($damageData['leakage_amount']) || strpos($damageData['leakage_amount'], '.') === false)
-    {
+    if (!is_numeric($damageData['leakage_amount']) || strpos($damageData['leakage_amount'], '.') === false) {
         return $response->withStatus(404);
     }
+
+    $damageData['longitude'] = array_key_exists('longitude', $damageData) ? sprintf("'%s'", $damageData['longitude']) : null;
+    $damageData['latitude'] = array_key_exists('latitude', $damageData) ? sprintf("'%s'", $damageData['latitude']) : null;
 
     /** @var Db $db */
     $db = $this->get('db');
@@ -220,8 +224,10 @@ $app->post('/damages', function (Request $request, Response $response) {
 
     $db->exec(
         sprintf(
-            "INSERT INTO damages (thermal_unit_id, leakage_amount, date) VALUES (%d, %f, '%s')",
+            "INSERT INTO damages (thermal_unit_id, longitude, latitude, leakage_amount, date) VALUES (%d, %f, '%s')",
             $damageData['thermal_unit_id'],
+            $damageData['longitude'],
+            $damageData['latitude'],
             $damageData['leakage_amount'],
             $damageData['date']
         )
@@ -267,11 +273,21 @@ $app->put('/damages/{id:[0-9]+}', function (Request $request, Response $response
         $oldDamage['leakage_amount'] = $damageData['leakage_amount'];
     }
 
+    if (
+        array_key_exists('longitude', $damageData)
+        && array_key_exists('latitude', $damageData)
+    ) {
+        $oldDamage['longitude'] = sprintf("'%s'", $damageData['longitude']);
+        $oldDamage['latitude'] = sprintf("'%s'", $damageData['latitude']);
+    }
+
     /** @var Db $db */
     $db = $this->get('db');
     $db->exec(sprintf(
-        'UPDATE damages SET thermal_unit_id = %d, leakage_amount = %f WHERE id = %d',
+        'UPDATE damages SET thermal_unit_id = %d, longitude = %s, latitude = %s, leakage_amount = %f WHERE id = %d',
         $oldDamage['thermal_unit_id'],
+        $oldDamage['longitude'],
+        $oldDamage['latitude'],
         $oldDamage['leakage_amount'],
         $oldDamage['id']
     ));
